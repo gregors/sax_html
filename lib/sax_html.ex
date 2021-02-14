@@ -6,9 +6,6 @@ defmodule SaxHtml do
     |> String.split("")
     |> ScriptTagFilter.filter()
     |> parsy(fun)
-
-   # found tag callback
-   # fun.({:start_tag, tag})
   end
 
 
