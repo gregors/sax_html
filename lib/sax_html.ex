@@ -9,7 +9,7 @@ defmodule SaxHtml do
   end
 
 
-  def parsy([], fun), do: nil
+  def parsy([], _fun), do: nil
 
   def parsy(text, fun) do
     { tag, text } = Tag.get(text)
