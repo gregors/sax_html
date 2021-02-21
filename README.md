@@ -18,7 +18,7 @@ html_text = """
 </html>
 """
 
-handler = fn {event, data} -> IO.puts("#{event} - #{data}") end
+handler = fn {event, data, state} -> IO.puts("#{event} - #{data}") end
 
 SaxHtml.parse(html_text, handler)
 start_tag - html
@@ -56,6 +56,20 @@ end_tag - html
 characters -
 ```
 
+Or with `state`. State must be returned from the callback
+
+```
+handler = fn
+  { :characters, chars, state} -> [ chars | state ]
+  { _, _, state} -> state
+end
+
+SaxHtml.parse(html_text, handler, []) |> Enum.join("") |> IO.inspect
+
+"\n\n\n  \n    Howdy!!!\n      \n    \n  \n  Gregors\n    \n  "
+```
+
+
 ## Installation
 
 The package is [available in Hex](https://hex.pm/packages/sax_html), the package can be installed by adding `sax_html` to your list of dependencies in `mix.exs`:
@@ -63,7 +77,7 @@ The package is [available in Hex](https://hex.pm/packages/sax_html), the package
 ```elixir
 def deps do
   [
-    {:sax_html, "~> 0.1.0"}
+    {:sax_html, "~> 0.2.0"}
   ]
 end
 ```

@@ -1,30 +1,31 @@
 defmodule SaxHtml do
   alias SaxHtml.{Tag, ScriptTagFilter}
 
-  def parse(text, fun) do
-    text
-    |> String.split("")
-    |> ScriptTagFilter.filter()
-    |> parsy(fun)
+  def parse(text, fun, state \\ []) do
+    final_state = text
+                  |> String.split("")
+                  |> ScriptTagFilter.filter()
+                  |> parsy(fun, state)
+
+    final_state
   end
 
+  def parsy([], fun, state), do: state
 
-  def parsy([], fun), do: nil
-
-  def parsy(text, fun) do
+  def parsy(text, fun, state) do
     { tag, text } = Tag.get(text)
 
-    if String.starts_with?(tag, "/") do
+    state = if String.starts_with?(tag, "/") do
       tag = String.trim_leading(tag, "/")
-      fun.({:end_tag, tag})
+      fun.({:end_tag, tag, state})
     else
-      fun.({:start_tag, tag})
+      fun.({:start_tag, tag, state})
     end
 
     { chars, text } = get_characters(text)
-    fun.({:characters, chars})
+    state = fun.({:characters, chars, state})
 
-    parsy(text, fun)
+    parsy(text, fun, state)
   end
 
 
