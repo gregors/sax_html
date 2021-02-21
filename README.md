@@ -18,9 +18,7 @@ html_text = """
 </html>
 """
 
-handler = fn {event, data, state} ->
-  IO.puts("#{event} - #{data}")
-end
+handler = fn {event, data, state} -> IO.puts("#{event} - #{data}") end
 
 SaxHtml.parse(html_text, handler)
 start_tag - html
