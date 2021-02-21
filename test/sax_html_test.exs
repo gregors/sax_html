@@ -17,6 +17,15 @@ defmodule SaxHtmlTest do
     </html>
   """
 
+  test "example run without state" do
+    fun = fn
+      { :characters, chars, _state} ->  IO.inspect(chars)
+      _ -> nil
+    end
+
+    SaxHtml.parse(@text, fun)
+  end
+
   test "start event" do
     fun = fn
 #      { :start_tag, _tag} -> tag |> String.upcase |> IO.inspect()
